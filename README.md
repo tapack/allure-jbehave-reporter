@@ -5,10 +5,10 @@
 This reporter allows to generate allure xml reports after JBehave test execution. (Scenario -> Test)
 
 Is other mapping:
-  - Feature -> Allure Test Suite
+  - Story -> Allure Test Suite
   - Scenario -> Allure Test Case
   - Step -> Allure Step
-  - Scenario Outline -> Allure Test Cases
+  - Scenario with Examples -> Allure Test Cases
 
 ## Usage
 Simply add **allure-jbehave-reporter** as dependency to your project and add it to your JBehave configuration.

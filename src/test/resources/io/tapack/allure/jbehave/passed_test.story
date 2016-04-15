@@ -4,10 +4,10 @@ Narrative:
     Report should display results according to mapping bellow.
 
     Mapping:
-        - Feature -> Allure Test Suite
+        - Story -> Allure Test Suite
         - Scenario -> Allure Test Case
         - Step -> Allure Step
-        - Scenario Outline -> Allure Test Cases
+        - Scenario with Examples -> Allure Test Cases
 
 Scenario: Calculate sum once
 Given the first number 2
