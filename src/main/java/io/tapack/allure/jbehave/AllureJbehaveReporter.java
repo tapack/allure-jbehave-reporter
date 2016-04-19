@@ -38,7 +38,7 @@ public class AllureJBehaveReporter implements StoryReporter {
     @Override
     public void beforeStory(Story story, boolean givenStory) {
         uid = generateSuiteUid(story.getName());
-        TestSuiteStartedEvent event = new TestSuiteStartedEvent(uid, story.getName());
+        TestSuiteStartedEvent event = new TestSuiteStartedEvent(uid, story.getPath());
         event.withLabels(AllureModelUtils.createTestFrameworkLabel("JBehave"));
         event.withTitle(story.getName());
         getLifecycle().fire(event);
@@ -131,6 +131,7 @@ public class AllureJBehaveReporter implements StoryReporter {
         getLifecycle().fire(new StepEvent() {
             @Override
             public void process(Step context) {
+                context.setName(step);
                 context.setTitle(step);
             }
         });
@@ -150,13 +151,15 @@ public class AllureJBehaveReporter implements StoryReporter {
 
     @Override
     public void notPerformed(String step) {
+        getLifecycle().fire(new StepStartedEvent(step).withTitle(step));
         getLifecycle().fire(new StepCanceledEvent());
+        getLifecycle().fire(new StepFinishedEvent());
     }
 
     @Override
     public void failed(String step, Throwable cause) {
-        getLifecycle().fire(new StepFinishedEvent());
         getLifecycle().fire(new StepFailureEvent().withThrowable(cause.getCause()));
+        getLifecycle().fire(new StepFinishedEvent());
         getLifecycle().fire(new TestCaseFailureEvent().withThrowable(cause.getCause()));
     }
 
