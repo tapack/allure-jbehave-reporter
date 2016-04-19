@@ -5,6 +5,8 @@ import org.jbehave.core.reporters.StoryReporter;
 import ru.yandex.qatools.allure.Allure;
 import ru.yandex.qatools.allure.config.AllureModelUtils;
 import ru.yandex.qatools.allure.events.*;
+import ru.yandex.qatools.allure.model.Step;
+import ru.yandex.qatools.allure.model.TestCaseResult;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +21,8 @@ public class AllureJBehaveReporter implements StoryReporter {
     private Allure lifecycle = Allure.LIFECYCLE;
     private final Map<String, String> suites = new HashMap<>();
     private String uid;
+    private boolean withExamples = false;
+    private String exampleName;
 
 
     @Override
@@ -88,17 +92,33 @@ public class AllureJBehaveReporter implements StoryReporter {
 
     @Override
     public void beforeExamples(List<String> steps, ExamplesTable table) {
-
+        withExamples = true;
     }
 
     @Override
-    public void example(Map<String, String> tableRow) {
-
+    public void example(final Map<String, String> tableRow) {
+        final String rowName = tableRow.toString();
+        if (withExamples) {
+            getLifecycle().fire(new TestCaseEvent() {
+                @Override
+                public void process(TestCaseResult context) {
+                    exampleName = context.getName();
+                    String name = exampleName + " " + rowName;
+                    context.setName(name);
+                    context.setTitle(name);
+                }
+            });
+        } else {
+            String name = exampleName + " " + rowName;
+            getLifecycle().fire(new TestCaseFinishedEvent());
+            getLifecycle().fire(new TestCaseStartedEvent(uid, name).withTitle(name));
+        }
+        withExamples = false;
     }
 
     @Override
     public void afterExamples() {
-
+        getLifecycle().fire(new TestCaseFinishedEvent());
     }
 
     @Override
@@ -107,7 +127,13 @@ public class AllureJBehaveReporter implements StoryReporter {
     }
 
     @Override
-    public void successful(String step) {
+    public void successful(final String step) {
+        getLifecycle().fire(new StepEvent() {
+            @Override
+            public void process(Step context) {
+                context.setTitle(step);
+            }
+        });
         getLifecycle().fire(new StepFinishedEvent());
     }
 
