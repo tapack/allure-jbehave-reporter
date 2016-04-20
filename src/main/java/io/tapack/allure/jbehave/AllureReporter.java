@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static ru.yandex.qatools.allure.utils.AnnotationManager.withExecutorInfo;
+
 /**
  * Jbehave Reporter that map Cucumber Scenario to Allure test.
  */
-public class AllureJBehaveReporter implements StoryReporter {
+public class AllureReporter implements StoryReporter {
 
     private Allure lifecycle = Allure.LIFECYCLE;
     private final Map<String, String> suites = new HashMap<>();
@@ -70,7 +72,9 @@ public class AllureJBehaveReporter implements StoryReporter {
 
     @Override
     public void beforeScenario(String scenarioTitle) {
-        getLifecycle().fire(new TestCaseStartedEvent(uid, scenarioTitle));
+        TestCaseStartedEvent event = new TestCaseStartedEvent(uid, scenarioTitle);
+        withExecutorInfo(event);
+        getLifecycle().fire(event);
         getLifecycle().fire(new ClearStepStorageEvent());
     }
 
@@ -115,7 +119,9 @@ public class AllureJBehaveReporter implements StoryReporter {
         } else {
             String name = exampleName + " " + rowName;
             getLifecycle().fire(new TestCaseFinishedEvent());
-            getLifecycle().fire(new TestCaseStartedEvent(uid, name).withTitle(name));
+            TestCaseStartedEvent event = new TestCaseStartedEvent(uid, name).withTitle(name);
+            withExecutorInfo(event);
+            getLifecycle().fire(event);
         }
         withExamples = false;
     }

@@ -26,7 +26,7 @@ public class BaseStory extends JUnitStory {
                 .useStoryReporterBuilder(new StoryReporterBuilder()
                         .withDefaultFormats()
                         .withFormats(CONSOLE)
-                        .withReporters(new AllureJBehaveReporter()));
+                        .withReporters(new AllureReporter()));
     }
 
 }
