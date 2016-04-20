@@ -4,7 +4,7 @@
 
     <groupId>io.tapack</groupId>
     <artifactId>allure-jbehave-reporter</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
 
     <name>Allure Jbehave Reporter</name>
     <description>
@@ -24,7 +24,7 @@
         <url>https://github.com/tapack/allure-jbehave-reporter</url>
         <connection>scm:git@github.com:tapack/allure-jbehave-reporter.git</connection>
         <developerConnection>scm:git:git@github.com:tapack/allure-jbehave-reporter.git</developerConnection>
-        <tag>allure-jbehave-reporter-0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
