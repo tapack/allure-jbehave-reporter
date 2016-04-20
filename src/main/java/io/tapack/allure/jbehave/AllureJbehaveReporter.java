@@ -128,6 +128,11 @@ public class AllureJBehaveReporter implements StoryReporter {
 
     @Override
     public void successful(final String step) {
+        updateStep(step);
+        getLifecycle().fire(new StepFinishedEvent());
+    }
+
+    private void updateStep(final String step) {
         getLifecycle().fire(new StepEvent() {
             @Override
             public void process(Step context) {
@@ -135,7 +140,6 @@ public class AllureJBehaveReporter implements StoryReporter {
                 context.setTitle(step);
             }
         });
-        getLifecycle().fire(new StepFinishedEvent());
     }
 
     @Override
@@ -145,8 +149,10 @@ public class AllureJBehaveReporter implements StoryReporter {
 
     @Override
     public void pending(String step) {
+        getLifecycle().fire(new StepStartedEvent(step).withTitle(step));
         getLifecycle().fire(new StepCanceledEvent());
-        getLifecycle().fire(new TestCasePendingEvent().withMessage("PENDING"));
+        getLifecycle().fire(new StepFinishedEvent());
+        getLifecycle().fire(new TestCasePendingEvent().withMessage("PENDING: Step is not implemented yet!"));
     }
 
     @Override
@@ -158,6 +164,7 @@ public class AllureJBehaveReporter implements StoryReporter {
 
     @Override
     public void failed(String step, Throwable cause) {
+        updateStep(step);
         getLifecycle().fire(new StepFailureEvent().withThrowable(cause.getCause()));
         getLifecycle().fire(new StepFinishedEvent());
         getLifecycle().fire(new TestCaseFailureEvent().withThrowable(cause.getCause()));
