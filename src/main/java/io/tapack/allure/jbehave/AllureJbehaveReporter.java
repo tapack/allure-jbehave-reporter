@@ -37,16 +37,20 @@ public class AllureJBehaveReporter implements StoryReporter {
 
     @Override
     public void beforeStory(Story story, boolean givenStory) {
-        uid = generateSuiteUid(story.getName());
-        TestSuiteStartedEvent event = new TestSuiteStartedEvent(uid, story.getPath());
-        event.withLabels(AllureModelUtils.createTestFrameworkLabel("JBehave"));
-        event.withTitle(story.getName());
-        getLifecycle().fire(event);
+        if (!givenStory) {
+            uid = generateSuiteUid(story.getName());
+            TestSuiteStartedEvent event = new TestSuiteStartedEvent(uid, story.getPath());
+            event.withLabels(AllureModelUtils.createTestFrameworkLabel("JBehave"));
+            event.withTitle(story.getName());
+            getLifecycle().fire(event);
+        }
     }
 
     @Override
     public void afterStory(boolean givenStory) {
-        getLifecycle().fire(new TestSuiteFinishedEvent(uid));
+        if (!givenStory) {
+            getLifecycle().fire(new TestSuiteFinishedEvent(uid));
+        }
     }
 
     @Override
