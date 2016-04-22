@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>ru.yandex.qatools.allure</groupId>
-            <artifactId>allure-java-adaptor-api</artifactId>
+            <artifactId>allure-java-aspects</artifactId>
             <version>${allure.version}</version>
         </dependency>
         <dependency>
