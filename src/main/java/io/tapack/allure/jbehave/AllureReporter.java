@@ -25,6 +25,7 @@ public class AllureReporter implements StoryReporter {
     private String uid;
     private boolean withExamples = false;
     private String exampleName;
+    private boolean isTestLevel = false;
 
 
     @Override
@@ -72,10 +73,16 @@ public class AllureReporter implements StoryReporter {
 
     @Override
     public void beforeScenario(String scenarioTitle) {
-        TestCaseStartedEvent event = new TestCaseStartedEvent(uid, scenarioTitle);
-        withExecutorInfo(event);
-        getLifecycle().fire(event);
-        getLifecycle().fire(new ClearStepStorageEvent());
+        if (!isTestLevel) {
+            TestCaseStartedEvent event = new TestCaseStartedEvent(uid, scenarioTitle);
+            withExecutorInfo(event);
+            getLifecycle().fire(event);
+            getLifecycle().fire(new ClearStepStorageEvent());
+            isTestLevel = true;
+        } else {
+            beforeStep(scenarioTitle);
+            isTestLevel = false;
+        }
     }
 
     @Override
@@ -85,7 +92,13 @@ public class AllureReporter implements StoryReporter {
 
     @Override
     public void afterScenario() {
-        getLifecycle().fire(new TestCaseFinishedEvent());
+        if (isTestLevel) {
+            getLifecycle().fire(new TestCaseFinishedEvent());
+            isTestLevel = false;
+        } else {
+            getLifecycle().fire(new StepFinishedEvent());
+            isTestLevel = true;
+        }
     }
 
     @Override

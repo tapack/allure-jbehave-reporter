@@ -8,10 +8,15 @@ Narrative:
         - Scenario -> Allure Test Case
         - Step -> Allure Step
         - Scenario with Examples -> Allure Test Cases
+        - Scenario in GivenStories at Story level -> Allure Test Case
+        - Scenario in GivenStories at Scenario level -> Allure Step
 
 GivenStories: io/tapack/allure/precondition.story
 
 Scenario: Calculate sum once
+GivenStories:
+io/tapack/allure/precondition_for_scenario.story,
+io/tapack/allure/precondition_for_scenario_2.story
 Given the second number 2
 When I add them together
 Then the sum is equal to 4
